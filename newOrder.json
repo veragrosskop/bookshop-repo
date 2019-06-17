@@ -1,0 +1,18 @@
+{
+  "orderId":1234,
+  "customerId":5678,
+  "bookList": [
+    {
+      "isbn": 9876543210002,
+      "title": "Racconti Romani",
+      "author": "Moravia",
+      "summary": "Short stories centred in post-war Rome."
+    },
+    {
+      "isbn": 9876543210001,
+      "title": "Romeo and Juliet",
+      "author": "Shakespear",
+      "summary": "Love story, everybody dies..."
+    }
+  ]
+}
