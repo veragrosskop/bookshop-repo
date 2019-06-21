@@ -29,8 +29,9 @@ public class OrderRepository {
     }
 
     @Async
-    public CompletableFuture<List<Order>> saveNewOrder(Order order) {
+    public CompletableFuture<List<Order>> saveNewOrder(Order order) throws InterruptedException {
         this.orderList.add(order);
+        Thread.sleep(2000L);
 
         logger.info("The order with id: {} was saved in the Repository.", order.getOrderId());
         return CompletableFuture.completedFuture(this.orderList);

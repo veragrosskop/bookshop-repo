@@ -58,7 +58,11 @@ public class Library {
         this.bookArrayList = defaultBookList;
     }
 
-//    //look up overkill singleton contract + @Bean check what's best
+    public Library(List<Book> bookArrayList) {
+        this.bookArrayList = bookArrayList;
+    }
+
+    //    //look up overkill singleton contract + @Bean check what's best
 //    public synchronized static Library getInstance() {
 //        if (INSTANCE == null) {
 //            INSTANCE = new Library();

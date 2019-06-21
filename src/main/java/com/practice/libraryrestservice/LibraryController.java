@@ -73,25 +73,13 @@ public class LibraryController {
         return resultList;
     }
 
-    @PostMapping("/orderinitial")
-    public List<Order> makeBookOrder(@Valid @RequestBody Order customerOrder) {
-
-        orderRepository.saveNewOrder(customerOrder);
-        PaymentRepository paymentRepository = paymentService.loadRepository();
-
-        paymentRepository.getPaymentList().forEach(System.out::println);
-
-        return orderRepository.getOrderList();
-    }
 
     @Async
     @PostMapping("/order")
-    public void verifyPayment(@Valid @RequestBody Order customerOrder)
-            throws InterruptedException, ExecutionException {
+    public void verifyPayment(@Valid @RequestBody Order customerOrder) throws Exception {
 
         //start clock to test
         long start = System.currentTimeMillis();
-
 
         //async calls:
         CompletableFuture<List<Order>> orderList = orderRepository.saveNewOrder(customerOrder);
@@ -105,6 +93,6 @@ public class LibraryController {
         logger.info("--> payment: {}", payment.get());
         logger.info("--> orderList: {}", orderList.get());
         logger.info("--> paymentStatus: {}", customerOrder.isPaymentStatus());
-
     }
+
 }

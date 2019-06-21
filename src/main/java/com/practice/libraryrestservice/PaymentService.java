@@ -13,6 +13,7 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
@@ -35,23 +36,39 @@ public class PaymentService {
                 HttpMethod.GET, null, new ParameterizedTypeReference<List<Payment>>(){});
         List<Payment> payments = paymentResponse.getBody();
 
+        logger.debug("--> paymentList: {}", payments);
+
         PaymentRepository paymentRepository = new PaymentRepository(payments);
         logger.info("paymentRepository added.");
         return paymentRepository;
 
     }
 
+    public PaymentRepository loadRepository2(){
+//alternative solution to loadRepository, what is the pro/con?
+        logger.info("Loading2 the whole payment repository");
+        String url = "https://jsonplaceholder.typicode.com/posts";
+        Payment[] paymentResponse = restTemplate.getForObject(url, Payment[].class);
+        List<Payment> payments = Arrays.asList(paymentResponse);
+        PaymentRepository paymentRepository = new PaymentRepository(payments);
+        logger.debug("--> paymentList: {}", payments);
+
+        logger.info("paymentRepository added.");
+        return paymentRepository;
+
+    }
+
+
     @Async
     public CompletableFuture<Payment> findPayment(int userId, int id) throws InterruptedException {
 
         PaymentRepository paymentRepository = loadRepository();
-        logger.debug("--> paymentList: {}", paymentRepository.getPaymentList());
 
         logger.info("Looking up payment, with userId: {}, and id: {}.", userId, id);
         Payment payment = paymentRepository.requestPayment(userId, id);
 
         // Artificial delay of 1s for demonstration purposes
-        Thread.sleep(1000L);
+        Thread.sleep(2000L);
 
         return CompletableFuture.completedFuture(payment);
 

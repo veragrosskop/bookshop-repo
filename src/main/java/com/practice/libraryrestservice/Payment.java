@@ -1,5 +1,8 @@
 package com.practice.libraryrestservice;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public class Payment {
 
     private int userId;
@@ -7,15 +10,15 @@ public class Payment {
     private String title;
     private String body;
 
-    public Payment(int userId, int id, String title, String body) {
+    @JsonCreator
+    public Payment(@JsonProperty("userId") int userId,
+                   @JsonProperty("id") int id,
+                   @JsonProperty("title") String title,
+                   @JsonProperty("body") String body) {
         this.userId = userId;
         this.id = id;
         this.title = title;
         this.body = body;
-    }
-
-    public Payment() {
-        super();
     }
 
     public boolean equalIds(int userId, int id) {

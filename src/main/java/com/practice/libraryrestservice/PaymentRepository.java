@@ -3,6 +3,7 @@ package com.practice.libraryrestservice;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class PaymentRepository {
@@ -13,6 +14,10 @@ public class PaymentRepository {
 
     public PaymentRepository(List<Payment> paymentList) {
         this.paymentList = paymentList;
+    }
+
+    public PaymentRepository(){
+        this.paymentList = new ArrayList<>();
     }
 
     public List<Payment> getPaymentList() {
