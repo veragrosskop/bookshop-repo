@@ -6,10 +6,9 @@ import org.slf4j.LoggerFactory;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PaymentRepository {
+public class PaymentRepository implements Repository<Payment> {
+
     private final Logger logger = LoggerFactory.getLogger(PaymentRepository.class);
-
-
     private List<Payment> paymentList;
 
     public PaymentRepository(List<Payment> paymentList) {
@@ -24,18 +23,33 @@ public class PaymentRepository {
         return paymentList;
     }
 
-    public Payment requestPayment(int userId, int id) {
+    public void setPaymentList(List<Payment> paymentList) {
+        this.paymentList = paymentList;
+    }
 
-        Payment foundPayment = null;
+    @Override
+    public void add(Payment item) {
+        this.paymentList.add(item);
+    }
 
+    @Override
+    public void add(Iterable<Payment> items) {
+        items.forEach((item) -> this.paymentList.add(item));
+    }
+
+    @Override
+    public void update(Iterable<Payment> items) {
+        this.setPaymentList((List<Payment>) items);
+    }
+
+    @Override
+    public Payment getById(long id) {
         for (Payment payment : this.paymentList) {
-            logger.debug("checking payment {}.", payment);
-
-            if (payment.equalIds(userId, id)) {
-                logger.info("payment {}, {} was found", userId, id);
-                foundPayment = payment;
+            if (payment.getId() == id) {
+                return payment;
             }
         }
-        return foundPayment;
+        return null;
     }
+
 }

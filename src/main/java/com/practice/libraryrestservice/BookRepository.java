@@ -1,8 +1,5 @@
 package com.practice.libraryrestservice;
 
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -10,21 +7,11 @@ import java.util.List;
 
 // look up @Bean annotation
 @Component
-public class Library {
+public class BookRepository implements Repository<Book> {
 
-    /*
-    The most popular approach is to implement a Singleton by creating a regular class and making sure it has:
-    - A private constructor
-    - A static field containing its only instance
-    - A static factory method for obtaining the instance
-    */
-
-   // private static Library INSTANCE;
     private List<Book> bookArrayList;
 
-//    private static final Object asdf = new Object();
-
-    public Library(){
+    public BookRepository(){
         //create some sample books
         Book romeoAndJuliet = new Book(9876543210001L, "Romeo and Juliet", "Shakespear",
                 "Love story, everybody dies...");
@@ -58,17 +45,9 @@ public class Library {
         this.bookArrayList = defaultBookList;
     }
 
-    public Library(List<Book> bookArrayList) {
+    public BookRepository(List<Book> bookArrayList) {
         this.bookArrayList = bookArrayList;
     }
-
-    //    //look up overkill singleton contract + @Bean check what's best
-//    public synchronized static Library getInstance() {
-//        if (INSTANCE == null) {
-//            INSTANCE = new Library();
-//        }
-//        return INSTANCE;
-//    }
 
     public List<Book> getBookArrayList() {
         /* TO DO: Create a copy of the arraylist so it's well encapsulated? (Read up on thread safety etc */
@@ -79,7 +58,8 @@ public class Library {
         this.bookArrayList = bookArrayList;
     }
 
-    public Book findIsbn(long isbn){
+    @Override
+    public Book getById(long isbn){
         for (Book book : this.bookArrayList) {
             if (book.equalIsbn(isbn)) {
                 return book;
@@ -88,7 +68,23 @@ public class Library {
         return null;
     }
 
+    @Override
+    public void add(Book item) {
+        this.bookArrayList.add(item);
+    }
+
+    @Override
+    public void add(Iterable<Book> items) {
+        items.forEach((item) -> this.bookArrayList.add(item));
+    }
+
+    @Override
+    public void update(Iterable<Book> items) {
+        this.setBookArrayList((List<Book>) items);
+    }
+
     public List<Book> searchText(String searchString) {
+        //adapt to interface!
 
         ArrayList<Book> resultArrayList = new ArrayList<>();
 
@@ -132,7 +128,6 @@ public class Library {
     public List<Book> requestAuthor(String author) {
 
         ArrayList<Book> resultArrayList = new ArrayList<>();
-
 
         for (Book book : this.bookArrayList) {
             if (searchHelper(book.getAuthor(), author)) {

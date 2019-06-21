@@ -6,13 +6,13 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public class Payment {
 
     private int userId;
-    private int id;
+    private long id;
     private String title;
     private String body;
 
     @JsonCreator
     public Payment(@JsonProperty("userId") int userId,
-                   @JsonProperty("id") int id,
+                   @JsonProperty("id") long id,
                    @JsonProperty("title") String title,
                    @JsonProperty("body") String body) {
         this.userId = userId;
@@ -21,9 +21,23 @@ public class Payment {
         this.body = body;
     }
 
-    public boolean equalIds(int userId, int id) {
-        return this.userId == userId && this.id==id;
+
+    public int getUserId() {
+        return userId;
     }
+
+    public long getId() {
+        return id;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public String getBody() {
+        return body;
+    }
+
 
     public String toString() {
         return "" + userId + ","+ id + "," + title;

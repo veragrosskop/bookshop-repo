@@ -2,18 +2,15 @@ package com.practice.libraryrestservice;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.CompletableFuture;
 
 @Component
-public class OrderRepository {
+public class OrderRepository implements Repository<Order> {
 
     private List<Order> orderList;
-
     private static final Logger logger = LoggerFactory.getLogger(OrderRepository.class);
 
     public OrderRepository() {
@@ -28,14 +25,30 @@ public class OrderRepository {
         this.orderList = orderList;
     }
 
-    @Async
-    public CompletableFuture<List<Order>> saveNewOrder(Order order) throws InterruptedException {
-        this.orderList.add(order);
-        Thread.sleep(2000L);
-
-        logger.info("The order with id: {} was saved in the Repository.", order.getOrderId());
-        return CompletableFuture.completedFuture(this.orderList);
+    @Override
+    public void add(Order item) {
+        this.orderList.add(item);
     }
 
+    @Override
+    public void add(Iterable<Order> items) {
+        items.forEach((item) -> this.orderList.add(item));
+    }
+
+    @Override
+    public void update(Iterable<Order> items) {
+        this.setOrderList((List<Order>) items);
+
+    }
+
+    @Override
+    public Order getById(long id) {
+        for (Order order : this.orderList) {
+            if (order.getOrderId() == id) {
+                return order;
+            }
+        }
+        return null;
+    }
 
 }
